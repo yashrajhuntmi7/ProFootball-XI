@@ -2,42 +2,82 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Pro Football 11 - Main</title>
+  <title>Build Team - Pro Football 11</title>
+  <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
 
+<header>
   <h1>Pro Football 11</h1>
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="main.html">Build Now</a>
+  </nav>
+</header>
 
+<main>
+  <div class="builder">
 
-  <input type="text" id="search" placeholder="Search player..." />
+    <div class="top-bar">
+      <select id="formation">
+        <option value="4-3-3">4-3-3</option>
+        <option value="4-4-2">4-4-2</option>
+        <option value="3-5-2">3-5-2</option>
+        <option value="5-3-2">5-3-2</option>
+        <option value="4-2-3-1">4-2-3-1</option>
+        <option value="4-1-2-1-2">4-1-2-1-2</option>
+        <option value="3-4-3">3-4-3</option>
+        <option value="5-4-1">5-4-1</option>
+        <option value="4-5-1">4-5-1</option>
+        <option value="3-4-2-1">3-4-2-1</option>
+        <option value="4-3-2-1">4-3-2-1</option>
+        <option value="5-2-3">5-2-3</option>
+        <option value="3-3-4">3-3-4</option>
+        <option value="4-2-2-2">4-2-2-2</option>
+        <option value="3-6-1">3-6-1</option>
+      </select>
 
+      <input type="text" placeholder="Enter Team Name">
+    </div>
 
-  <select id="nation">
-    <option value="">All Nations</option>
-  </select>
+    <div id="pitch" class="pitch"></div>
 
-  <select id="position">
-    <option value="">All Positions</option>
-  </select>
+  </div>
+</main>
 
-  <select id="league">
-    <option value="">All Leagues</option>
-  </select>
+<div id="playerModal" class="modal">
+  <div class="modal-content">
 
+    <div class="controls">
+      <input type="text" id="search" placeholder="Search players...">
 
-  <select id="sort">
-    <option value="">Sort</option>
-    <option value="name">Name (A-Z)</option>
-    <option value="name-desc">Name (Z-A)</option>
-  </select>
+      <select id="filter">
+        <option value="">All</option>
+        <option value="GK">GK</option>
+        <option value="DEF">DEF</option>
+        <option value="MID">MID</option>
+        <option value="ATT">ATT</option>
+      </select>
 
-  <hr>
+      <select id="sort">
+        <option value="">Sort</option>
+        <option value="overall">Overall</option>
+        <option value="pace">Pace</option>
+        <option value="shooting">Shooting</option>
+        <option value="passing">Passing</option>
+        <option value="dribbling">Dribbling</option>
+        <option value="defending">Defending</option>
+        <option value="physical">Physical</option>
+      </select>
+    </div>
 
+    <div id="playerList" class="player-list"></div>
 
-  <div id="players"></div>
+  </div>
+</div>
 
-  <script src="main.js"></script>
+<script src="main.js"></script>
 
 </body>
 </html>
