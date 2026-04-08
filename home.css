@@ -1,0 +1,128 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #0f172a, #020617 70%);
+  color: #e5e7eb;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 60px;
+}
+
+h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #38bdf8, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+nav {
+  display: flex;
+  gap: 25px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #cbd5f5;
+  font-weight: 600;
+  padding: 8px 16px;
+  transition: transform 0.25s ease;
+}
+
+nav a:hover {
+  transform: scale(1.15);
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  gap: 30px;
+}
+
+.card {
+  width: 90%;
+  max-width: 900px;
+  background: rgba(255,255,255,0.05);
+  padding: 30px;
+  border-radius: 16px;
+  transition: transform 0.25s ease;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+.card h2 {
+  margin-bottom: 10px;
+  color: #60a5fa;
+}
+
+.card p {
+  color: #9ca3af;
+  line-height: 1.7;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.grid div {
+  background: rgba(255,255,255,0.04);
+  padding: 15px;
+  border-radius: 12px;
+  transition: transform 0.25s ease;
+}
+
+.grid div:hover {
+  transform: scale(1.05);
+}
+
+.grid h3 {
+  margin-bottom: 5px;
+  color: #38bdf8;
+  font-size: 1rem;
+}
+
+.grid p {
+  font-size: 0.9rem;
+}
+
+.cta {
+  margin-top: 10px;
+  padding: 15px 40px;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  color: #020617;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 40px;
+  font-size: 1.2rem;
+  transition: transform 0.25s ease;
+}
+
+.cta:hover {
+  transform: scale(1.15);
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
