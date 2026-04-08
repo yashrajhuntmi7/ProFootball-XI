@@ -1,6 +1,5 @@
 const pitch = document.getElementById("pitch");
 const formationSelect = document.getElementById("formation");
-
 const modal = document.getElementById("playerModal");
 const playerList = document.getElementById("playerList");
 const searchInput = document.getElementById("search");
@@ -29,113 +28,113 @@ const formations = {
   "3-6-1": [[50,90],[30,70],[50,70],[70,70],[10,50],[30,50],[50,50],[70,50],[90,50],[50,35],[50,20]]
 };
 
+const positionMap = {
+  GK: ["GK"],
+  DEF: ["CB","LB","RB","LWB","RWB"],
+  MID: ["CM","CDM","CAM","LM","RM"],
+  ATT: ["ST","CF","LW","RW"]
+};
+
+const showError = msg => playerList.innerHTML = `<div style="padding:20px;color:red;text-align:center;">${msg}</div>`;
+
 function renderFormation(name) {
   pitch.innerHTML = "";
   selectedPlayers.clear();
-
   if (!formations[name]) return;
 
-  formations[name].forEach(function(pos) {
-    const player = document.createElement("div");
-    player.className = "player";
-    player.style.left = pos[0] + "%";
-    player.style.top = pos[1] + "%";
-    player.textContent = "+";
-    player.dataset.playerId = "";
+  formations[name].forEach(([x,y]) => {
+    const el = document.createElement("div");
+    el.className = "player";
+    el.style.left = x + "%";
+    el.style.top = y + "%";
+    el.textContent = "+";
+    el.dataset.playerId = "";
 
-    player.addEventListener("click", function() {
-      if (player.dataset.playerId) {
-        selectedPlayers.delete(player.dataset.playerId);
-        player.dataset.playerId = "";
-        player.classList.remove("active");
-        player.textContent = "+";
+    el.onclick = () => {
+      if (el.dataset.playerId) {
+        selectedPlayers.delete(el.dataset.playerId);
+        el.dataset.playerId = "";
+        el.classList.remove("active");
+        el.textContent = "+";
         return;
       }
-
-      currentSlot = player;
+      currentSlot = el;
       modal.style.display = "flex";
       renderPlayers(playersData);
-    });
+    };
 
-    pitch.appendChild(player);
+    pitch.appendChild(el);
   });
 }
 
 async function fetchPlayers() {
   try {
+    playerList.innerHTML = "Loading...";
     const res = await fetch("http://localhost:3000/players");
-    const data = await res.json();
+    if (!res.ok) throw Error("Failed to fetch");
 
-    if (Array.isArray(data)) {
-      playersData = data;
-    } else if (data.players) {
-      playersData = data.players;
-    } else if (data.player) {
-      playersData = [data.player];
-    } else {
-      playersData = [];
-    }
+    const data = await res.json();
+    playersData = data.players || (data.player ? [data.player] : data);
+
+    if (!playersData.length) throw Error("No players found");
 
     renderPlayers(playersData);
-
-  } catch (error) {
-    console.log(error);
+  } catch (e) {
+    showError(e.message);
   }
 }
 
 function renderPlayers(data) {
   playerList.innerHTML = "";
+  if (!data.length) return showError("No players match");
 
-  data.forEach(function(p) {
-    if (selectedPlayers.has(p.id)) return;
+  data
+    .filter(p => !selectedPlayers.has(p.id))
+    .forEach(p => {
+      const div = document.createElement("div");
+      div.className = "player-item";
+      div.innerHTML = `<img src="${p.picture}"><span>${p.name} (${p.overall})</span>`;
 
-    const div = document.createElement("div");
-    div.className = "player-item";
+      div.onclick = () => {
+        currentSlot.classList.add("active");
+        currentSlot.dataset.playerId = p.id;
+        selectedPlayers.add(p.id);
+        currentSlot.innerHTML = `<img src="${p.picture}">`;
+        modal.style.display = "none";
+      };
 
-    div.innerHTML = `
-      <img src="${p.picture}">
-      <span>${p.name} (${p.overall})</span>
-    `;
-
-    div.addEventListener("click", function() {
-      currentSlot.classList.add("active");
-      currentSlot.dataset.playerId = p.id;
-      selectedPlayers.add(p.id);
-      currentSlot.innerHTML = `<img src="${p.picture}">`;
-      modal.style.display = "none";
+      playerList.appendChild(div);
     });
-
-    playerList.appendChild(div);
-  });
 }
 
 function applyFilters() {
-  let filtered = [...playersData];
+  try {
+    let data = [...playersData];
 
-  const search = searchInput.value.toLowerCase();
-  const filter = filterSelect.value;
-  const sort = sortSelect.value;
+    if (searchInput.value)
+      data = data.filter(p => p.name.toLowerCase().includes(searchInput.value.toLowerCase()));
 
-  if (search) filtered = filtered.filter(p => p.name.toLowerCase().includes(search));
-  if (filter) filtered = filtered.filter(p => p.position.includes(filter));
-  if (sort) filtered = filtered.sort((a,b)=>b[sort]-a[sort]);
+    if (filterSelect.value)
+      data = data.filter(p => positionMap[filterSelect.value].includes(p.position));
 
-  renderPlayers(filtered);
+    if (sortSelect.value)
+      data.sort((a,b) => b[sortSelect.value] - a[sortSelect.value]);
+
+    renderPlayers(data);
+  } catch {
+    showError("Error processing data");
+  }
 }
 
-searchInput.addEventListener("input", applyFilters);
-filterSelect.addEventListener("change", applyFilters);
-sortSelect.addEventListener("change", applyFilters);
+searchInput.oninput = applyFilters;
+filterSelect.onchange = applyFilters;
+sortSelect.onchange = applyFilters;
 
-formationSelect.addEventListener("change", function() {
-  renderFormation(formationSelect.value);
-});
+formationSelect.onchange = () => renderFormation(formationSelect.value);
 
-window.addEventListener("click", function(e) {
-  if (e.target === modal) modal.style.display = "none";
-});
+window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
   fetchPlayers();
   renderFormation(formationSelect.value);
 });
