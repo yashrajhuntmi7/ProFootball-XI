@@ -57,7 +57,7 @@ function renderFormation(name) {
 function fetchPlayers() {
   playerList.innerHTML = "Loading...";
 
-  fetch("http://localhost:3000/players")
+  fetch("https://api-813k.onrender.com/cars")
     .then(function(response) {
 
       if (!response.ok) {
